@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#efe8da" />
+<title>Gavin Matthew A. Dela Fuente — AIE Portfolio</title>
+<meta name="description" content="Personal academic portfolio of Gavin Matthew A. Dela Fuente, 1st year BS Artificial Intelligence Engineering student at Mapúa." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;600;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper: #efe8da;
+    --paper2: #e4dbc6;
+    --ink: #14120f;
+    --red: #ff4a1c;
+    --mustard: #f4b82e;
+    --blue: #2d4bff;
+    --muted: rgba(20,18,15,.62);
+    --display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'DM Mono', ui-monospace, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--display); font-size: 17px; line-height: 1.55;
+    overflow-x: clip; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--red); color: var(--paper); }
+  a { color: inherit; }
+  .wrap { max-width: 1280px; margin: 0 auto; position: relative; }
+  section { position: relative; padding: 130px 5vw 120px; }
+
+  /* ---------- grain ---------- */
+  .grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; pointer-events: none; z-index: 9000; opacity: .07;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 1s steps(6) infinite;
+  }
+  @keyframes grain {
+    0%{transform:translate(0,0)} 20%{transform:translate(-4%,3%)} 40%{transform:translate(3%,-4%)}
+    60%{transform:translate(-3%,-2%)} 80%{transform:translate(4%,4%)} 100%{transform:translate(0,0)}
+  }
+
+  /* ---------- pick cursor ---------- */
+  .pick { display: none; position: fixed; left: 0; top: 0; width: 26px; height: 30px; z-index: 9999; pointer-events: none; mix-blend-mode: difference; will-change: transform; }
+  .pick svg { width: 100%; height: 100%; display: block; }
+  @media (hover: hover) and (pointer: fine) {
+    .pick { display: block; }
+    * { cursor: none !important; }
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500; padding: 20px 4vw;
+    display: flex; justify-content: space-between; pointer-events: none;
+    mix-blend-mode: difference; color: #fff;
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+  }
+
+  /* ---------- dock ---------- */
+  .dock {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 600;
+    display: flex; align-items: center; gap: 2px; padding: 7px;
+    background: var(--ink); color: var(--paper); border-radius: 999px;
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,.55); max-width: 96vw;
+  }
+  .eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; padding: 0 10px 0 12px; }
+  .eq i { width: 3px; background: var(--red); border-radius: 2px; height: 30%; animation: eq 1s ease-in-out infinite; }
+  .eq i:nth-child(2) { animation-delay: -.35s; } .eq i:nth-child(3) { animation-delay: -.7s; } .eq i:nth-child(4) { animation-delay: -.15s; }
+  @keyframes eq { 0%,100% { height: 20%; } 50% { height: 100%; } }
+  .dock a {
+    font-family: var(--mono); font-size: .72rem; color: rgba(239,232,218,.6); text-decoration: none;
+    padding: 9px 14px; border-radius: 999px; transition: background .3s, color .3s; white-space: nowrap;
+  }
+  .dock a b { color: var(--red); font-weight: 500; margin-right: 6px; }
+  .dock a:hover { color: var(--paper); }
+  .dock a.active { background: var(--paper); color: var(--ink); }
+  @media (max-width: 700px) {
+    .dock a span { display: none; } .dock a.active span { display: inline; } .dock a { padding: 9px 11px; }
+    .eq { padding: 0 6px 0 8px; }
+  }
+
+  /* ---------- shared type ---------- */
+  .sec-label {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+    display: flex; gap: 14px; align-items: center; margin-bottom: 28px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: .3; }
+  .sec-label b { color: var(--red); font-weight: 500; }
+  .h2 { font-size: clamp(2.6rem, 7.4vw, 6.4rem); line-height: .93; letter-spacing: -.045em; font-weight: 800; }
+  .h2 em, .accent { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--red); }
+  mark { background: linear-gradient(transparent 62%, rgba(255,74,28,.4) 62%); color: inherit; }
+  .ch { display: inline-block; text-align: center; }
+
+  .reveal { opacity: 0; transform: translateY(44px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .btn-pill {
+    display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 999px;
+    font: 600 .95rem var(--display); text-decoration: none; border: 2px solid var(--ink);
+    background: var(--ink); color: var(--paper); transition: background .3s, color .3s;
+  }
+  .btn-pill:hover { background: var(--red); border-color: var(--red); color: var(--ink); }
+  .btn-pill.ghost { background: transparent; color: var(--ink); }
+  .btn-pill.ghost:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  button.btn-pill { font-family: var(--display); }
+
+  /* =========================================================
+     HERO
+     ========================================================= */
+  .hero { background: var(--paper); min-height: 100svh; padding-top: 100px; padding-bottom: 150px; }
+  .hero-meta {
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; position: relative; z-index: 3;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  }
+  .hero-meta b { color: var(--red); font-weight: 500; }
+
+  .name {
+    position: relative; z-index: 2; color: var(--paper); mix-blend-mode: difference;
+    font-weight: 800; letter-spacing: -.055em; line-height: .8; text-transform: uppercase;
+    font-size: clamp(4.4rem, 21vw, 19rem); margin: 5vh 0 6vh;
+  }
+  .name .row1 { display: flex; align-items: flex-start; gap: 1.6vw; }
+  .name .line { display: block; white-space: nowrap; }
+  .name .l2 { font-size: .62em; margin-top: .06em; }
+  .name .mid {
+    font-family: var(--serif); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: 0;
+    font-size: max(1.4rem, .17em); line-height: 1; margin-top: .55em; transform: rotate(-6deg);
+  }
+
+  .vinyl-wrap {
+    position: absolute; z-index: 1; right: -7vw; top: 110px; width: clamp(260px, 42vw, 620px); aspect-ratio: 1;
+    will-change: transform;
+  }
+  .vinyl {
+    width: 100%; height: 100%; border-radius: 50%; position: relative;
+    background: repeating-radial-gradient(circle at 50% 50%, #0b0b0b 0 2px, #1d1d1d 2px 3px);
+    box-shadow: 0 50px 90px -35px rgba(0,0,0,.65), inset 0 0 0 7px #080808;
+  }
+  .vinyl .label { position: absolute; left: 33%; top: 33%; width: 34%; height: 34%; }
+  .glint {
+    position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: conic-gradient(from 25deg, rgba(255,255,255,.2), transparent 18%, rgba(255,255,255,.13) 42%, transparent 58%, rgba(255,255,255,.2) 80%, transparent);
+  }
+  .vinyl-hint {
+    position: absolute; left: 8%; bottom: -8%; font-family: var(--mono); font-size: .7rem; letter-spacing: .14em;
+    text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 999px;
+    transform: rotate(-4deg);
+  }
+
+  .hero-bottom { display: grid; grid-template-columns: 1.25fr .75fr; gap: 5vw; align-items: end; position: relative; z-index: 3; }
+  .iam { font-size: clamp(1.6rem, 3.3vw, 2.8rem); font-weight: 600; letter-spacing: -.035em; line-height: 1.1; margin-bottom: 22px; }
+  .rot { display: inline-block; height: 1.15em; overflow: hidden; vertical-align: bottom; }
+  .rot-inner { display: flex; flex-direction: column; transition: transform .7s cubic-bezier(.7,0,.2,1); }
+  .rot-inner span { height: 1.15em; white-space: nowrap; color: var(--red); font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+  .intro { font-family: var(--serif); font-size: clamp(1.25rem, 2.1vw, 1.7rem); line-height: 1.33; max-width: 44ch; margin-bottom: 30px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .ticket { border: 2px solid var(--ink); border-radius: 18px; background: var(--paper); position: relative; overflow: hidden; }
+  .ticket::before, .ticket::after {
+    content: ''; position: absolute; left: -10px; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); z-index: 2;
+  }
+  .ticket::before { top: -10px; } .ticket::after { bottom: -10px; }
+  .ticket div { padding: 18px 26px; border-bottom: 2px dashed rgba(20,18,15,.35); }
+  .ticket div:last-child { border-bottom: 0; }
+  .ticket small { display: block; font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .ticket b { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; display: block; margin-top: 2px; }
+
+  @media (max-width: 900px) {
+    .hero-bottom { grid-template-columns: 1fr; }
+    .vinyl-wrap { top: 150px; right: -22vw; width: 78vw; opacity: .95; }
+    .vinyl-hint { display: none; }
+  }
+
+  /* ---------- marquee ---------- */
+  .marquee {
+    position: relative; z-index: 5; margin: -50px 0 -50px -5vw; width: 110vw; transform: rotate(-2deg);
+    background: var(--red); color: var(--ink); border-block: 2px solid var(--ink); overflow: hidden; padding: 16px 0;
+  }
+  .mq-track { display: flex; width: max-content; white-space: nowrap; will-change: transform; }
+  .mq-track span { font-weight: 800; font-size: clamp(1.4rem, 3vw, 2.4rem); letter-spacing: -.03em; text-transform: uppercase; padding: 0 1.2rem; }
+  .mq-track i { font-style: normal; align-self: center; font-size: 1.1rem; }
+
+  /* =========================================================
+     ABOUT
+     ========================================================= */
+  .about { background: var(--paper2); padding-top: 170px; }
+  .why { display: grid; grid-template-columns: 210px 1fr; gap: 30px; margin-top: 60px; align-items: start; }
+  .kicker { font-family: var(--mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--red); padding-top: 12px; }
+  .lead { font-family: var(--serif); font-size: clamp(1.5rem, 3.2vw, 2.65rem); line-height: 1.2; max-width: 30em; }
+  @media (max-width: 800px) { .why { grid-template-columns: 1fr; gap: 8px; } }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 80px; }
+  @media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
+  .panel { border-radius: 30px; padding: 38px; position: relative; overflow: hidden; }
+  .panel.dark { background: var(--ink); color: var(--paper); }
+  .panel.light { background: var(--paper); border: 2px solid var(--ink); }
+  .panel .kicker { padding: 0; margin-bottom: 26px; }
+  .goal-big { font-size: clamp(2.6rem, 5.4vw, 4.9rem); font-weight: 800; line-height: .95; letter-spacing: -.045em; text-transform: uppercase; }
+  .goal-x { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--red); font-size: clamp(2.2rem, 4.6vw, 4.1rem); line-height: 1; margin: 8px 0 22px; }
+  .panel p { color: rgba(239,232,218,.75); max-width: 36ch; }
+  .skills { list-style: none; }
+  .skills li {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 18px; flex-wrap: wrap;
+    padding: 20px 0; border-bottom: 1.5px solid rgba(20,18,15,.25); transition: padding .35s, color .35s;
+  }
+  .skills li:first-of-type { border-top: 1.5px solid rgba(20,18,15,.25); }
+  .skills li:hover { padding-left: 14px; color: var(--red); }
+  .sk-n { font-size: 1.9rem; font-weight: 800; letter-spacing: -.04em; }
+  .sk-d { font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+
+  /* skill tree */
+  .tree-wrap { margin-top: 110px; }
+  .tree-wrap h3 { font-size: clamp(1.9rem, 4.2vw, 3.4rem); letter-spacing: -.04em; line-height: 1; margin-bottom: 14px; font-weight: 800; }
+  .tree-wrap > p { max-width: 54ch; color: var(--muted); margin-bottom: 54px; }
+  .tree { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .node { position: relative; text-align: center; padding: 0 8px; }
+  .node .dot {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px; display: grid; place-items: center;
+    font-size: 1.3rem; position: relative; z-index: 2; border: 2px solid var(--ink); background: var(--paper2);
+  }
+  .node.done .dot { background: var(--ink); color: var(--paper); }
+  .node.now .dot { background: var(--red); border-color: var(--red); color: var(--ink); animation: ping 2s infinite; }
+  .node.goal .dot { border-style: dashed; border-color: var(--red); color: var(--red); }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(255,74,28,.55); } 70%,100% { box-shadow: 0 0 0 20px rgba(255,74,28,0); } }
+  .node:not(:last-child)::after {
+    content: ''; position: absolute; top: 27px; left: calc(50% + 34px); right: calc(-50% + 34px); height: 0;
+    border-top: 2px dashed rgba(20,18,15,.4); z-index: 1;
+  }
+  .node.done:not(:last-child)::after { border-top: 2px solid var(--ink); }
+  .node b { display: block; font-size: 1.05rem; letter-spacing: -.02em; line-height: 1.2; }
+  .node small { font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 6px; }
+  .node.locked { opacity: .55; }
+  @media (max-width: 800px) {
+    .tree { grid-template-columns: 1fr; gap: 26px; }
+    .node { display: flex; gap: 18px; text-align: left; align-items: center; padding: 0; }
+    .node .dot { margin: 0; flex: none; }
+    .node:not(:last-child)::after { top: 56px; left: 27px; right: auto; width: 0; height: 36px; border-top: 0; border-left: 2px dashed rgba(20,18,15,.4); }
+    .node.done:not(:last-child)::after { border-left: 2px solid var(--ink); }
+  }
+
+  /* guitar stage */
+  .stage { margin-top: 110px; background: var(--ink); color: var(--paper); border-radius: 36px; padding: clamp(26px, 4vw, 56px); overflow: hidden; position: relative; }
+  .stage::before {
+    content: ''; position: absolute; width: 520px; height: 520px; border-radius: 50%; right: -160px; top: -200px;
+    background: radial-gradient(circle, rgba(255,74,28,.35), transparent 65%); pointer-events: none;
+  }
+  .stage-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 30px; position: relative; }
+  .stage-head h3 { font-size: clamp(2.2rem, 5.5vw, 4.6rem); letter-spacing: -.045em; line-height: .95; font-weight: 800; }
+  .stage-head p { color: rgba(239,232,218,.65); max-width: 42ch; margin-top: 14px; }
+  .stage-ctrl { display: flex; gap: 16px; align-items: center; }
+  .stage .btn-pill { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .stage .btn-pill:hover { background: var(--red); border-color: var(--red); }
+  .note-read { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(239,232,218,.6); }
+  .note-read b { display: inline-block; min-width: 1.4em; color: var(--red); font-size: 1.6rem; font-weight: 500; vertical-align: middle; }
+  #guitar { width: 100%; height: 290px; display: block; border-radius: 18px; touch-action: pan-x; position: relative; }
+  .guitar-hint { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(239,232,218,.5); margin-top: 16px; position: relative; }
+
+  /* =========================================================
+     PORTFOLIO
+     ========================================================= */
+  .portfolio { background: var(--ink); color: var(--paper); }
+  .portfolio .sec-label b { color: var(--red); }
+  .status {
+    display: flex; gap: 14px; align-items: center; margin: 44px 0 70px; padding: 20px 26px; max-width: 760px;
+    border: 1.5px dashed rgba(239,232,218,.4); border-radius: 18px; color: rgba(239,232,218,.85);
+  }
+  .pulse { width: 11px; height: 11px; border-radius: 50%; background: var(--red); flex: none; animation: ping 2s infinite; }
+  .sleeves { display: grid; grid-template-columns: repeat(4, 1fr); gap: 46px; padding-right: 6vw; }
+  @media (max-width: 1000px) { .sleeves { grid-template-columns: repeat(2, 1fr); gap: 34px; } }
+  @media (max-width: 560px) { .sleeves { grid-template-columns: 1fr; padding-right: 12vw; } }
+  .sleeve { position: relative; aspect-ratio: 1; }
+  .sleeve:hover { z-index: 5; }
+  .rec {
+    position: absolute; top: 4%; left: 4%; width: 92%; height: 92%; border-radius: 50%; z-index: 1;
+    background:
+      radial-gradient(circle, var(--lab) 0 15%, transparent 15.5%),
+      repeating-radial-gradient(circle, #0b0b0b 0 2px, #1d1d1d 2px 3px);
+    border: 1px solid #333; transition: transform .7s cubic-bezier(.2,.8,.2,1);
+  }
+  .cover {
+    position: absolute; inset: 0; z-index: 2; border-radius: 6px; padding: 22px; color: var(--ink); background: var(--bg);
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: 0 30px 50px -25px rgba(0,0,0,.8); transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .sleeve:hover .rec { transform: translateX(46%) rotate(200deg); }
+  .sleeve:hover .cover { transform: translateX(-5%) rotate(-3deg); }
+  .cover .no { font-family: var(--serif); font-style: italic; font-size: 3.4rem; line-height: 1; }
+  .cover h4 { font-size: 1.45rem; font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
+  .ph { font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; border: 1.5px dashed currentColor; border-radius: 10px; padding: 10px 12px; margin: 12px 0 10px; opacity: .8; }
+  .soon { font-family: var(--mono); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; }
+  .s1 { --bg: var(--red); --lab: var(--paper); }
+  .s2 { --bg: var(--mustard); --lab: var(--red); }
+  .s3 { --bg: var(--blue); --lab: var(--mustard); } .s3 .cover { color: var(--paper); }
+  .s4 { --bg: var(--paper); --lab: var(--blue); }
+
+  /* =========================================================
+     REFLECTIONS
+     ========================================================= */
+  .blog { background: var(--paper); }
+  .notes { margin-top: 70px; }
+  .note { border-top: 2px solid var(--ink); }
+  .note:last-child { border-bottom: 2px solid var(--ink); }
+  .note-head {
+    all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 110px 1fr auto 44px;
+    align-items: center; gap: 20px; padding: 32px 0; transition: padding .4s, color .4s;
+  }
+  .note-head:focus-visible { outline: 3px solid var(--red); outline-offset: 4px; }
+  .note-head:hover { padding-left: 18px; color: var(--red); }
+  .note .n { font-family: var(--serif); font-style: italic; font-size: clamp(2.6rem, 6vw, 5rem); line-height: .8; color: var(--red); }
+  .note .t { font-size: clamp(1.5rem, 3.6vw, 3rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+  .note .tag { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; border: 1.5px solid currentColor; padding: 6px 12px; border-radius: 99px; }
+  .note .plus { font-size: 2rem; transition: transform .5s; text-align: center; }
+  .note.open .plus { transform: rotate(45deg); }
+  .note-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.2,.8,.2,1); }
+  .note.open .note-body { grid-template-rows: 1fr; }
+  .note-body > div { overflow: hidden; }
+  .note-body p { font-family: var(--serif); font-size: clamp(1.3rem, 2.3vw, 1.9rem); line-height: 1.3; padding: 0 0 38px 130px; max-width: 34em; }
+  @media (max-width: 700px) {
+    .note-head { grid-template-columns: 56px 1fr 30px; gap: 12px; }
+    .note .tag { display: none; }
+    .note-body p { padding-left: 68px; }
+  }
+  .reflection { margin-top: 110px; display: grid; grid-template-columns: 210px 1fr; gap: 30px; }
+  @media (max-width: 800px) { .reflection { grid-template-columns: 1fr; gap: 8px; } }
+  .reflection blockquote { font-family: var(--serif); font-style: italic; font-size: clamp(1.8rem, 4.2vw, 3.6rem); line-height: 1.12; letter-spacing: -.01em; }
+
+  /* =========================================================
+     CONTACT
+     ========================================================= */
+  .contact { background: var(--red); color: var(--ink); padding-bottom: 150px; }
+  .contact .sec-label b { color: var(--paper); }
+  .giant { font-weight: 800; text-transform: uppercase; letter-spacing: -.06em; line-height: .8; font-size: clamp(4.6rem, 22vw, 20rem); margin: 20px 0 60px; white-space: nowrap; }
+  .mail {
+    all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    font-size: clamp(1.4rem, 4.8vw, 3.8rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.1; position: relative; padding-bottom: 8px;
+  }
+  .mail::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 4px; background: var(--ink); transform-origin: left; transition: transform .5s; }
+  .mail:hover::after { transform: scaleX(0); transform-origin: right; }
+  .mail small { font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; border: 2px solid var(--ink); padding: 7px 14px; border-radius: 99px; font-weight: 400; }
+  .mail:focus-visible { outline: 3px solid var(--ink); outline-offset: 6px; }
+  .links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 70px; }
+  @media (max-width: 960px) { .links { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .links { grid-template-columns: 1fr; } }
+  .link-tile {
+    display: block; text-decoration: none; border: 2px solid var(--ink); border-radius: 22px; padding: 24px; min-height: 160px;
+    position: relative; transition: background .35s, color .35s; will-change: transform;
+  }
+  a.link-tile:hover { background: var(--ink); color: var(--paper); }
+  .link-tile small { font-family: var(--mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+  .link-tile b { display: block; margin-top: 30px; font-size: 1.35rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; word-break: break-word; }
+  .link-tile .arr { position: absolute; top: 20px; right: 22px; font-size: 1.5rem; transition: transform .3s; }
+  a.link-tile:hover .arr { transform: translate(4px,-4px); }
+  .link-tile.soon { border-style: dashed; opacity: .75; }
+  .foot {
+    margin-top: 110px; padding-top: 22px; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 84px; transform: translate(-50%, 140px); z-index: 700;
+    background: var(--paper); color: var(--ink); border: 2px solid var(--ink); padding: 12px 22px; border-radius: 99px;
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; transition: transform .5s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .toast.show { transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+
+<body>
+<div class="grain"></div>
+<div class="pick" id="pick"><svg viewBox="0 0 40 46"><path d="M20 2C30 2 38 8 38 18C38 30 26 42 20 44C14 42 2 30 2 18C2 8 10 2 20 2Z" fill="#fff"/></svg></div>
+
+<div class="topbar"><span>GMAD®</span><span>AIE100 · Portfolio</span></div>
+
+<nav class="dock" id="dock" aria-label="Sections">
+  <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <a href="#home" class="active"><b>01</b><span>Home</span></a>
+  <a href="#about"><b>02</b><span>About Me</span></a>
+  <a href="#portfolio"><b>03</b><span>Portfolio</span></a>
+  <a href="#blog"><b>04</b><span>Reflections</span></a>
+  <a href="#contact"><b>05</b><span>Contact</span></a>
+</nav>
+
+<main>
+<!-- ====================== 01 HOME ====================== -->
+<section id="home" class="hero">
+  <div class="wrap">
+    <div class="hero-meta">
+      <span><b>●</b> Side A · Personal Academic Portfolio</span>
+      <span>Mapúa · AIE100 — AI Engineering as a Discipline</span>
+    </div>
+
+    <div class="vinyl-wrap" id="vinylWrap" aria-label="Spinning vinyl record. Click to strum a chord.">
+      <div class="vinyl" id="vinyl">
+        <svg class="label" viewBox="0 0 100 100" aria-hidden="true">
+          <defs><path id="lp" d="M50,50 m-33,0 a33,33 0 1,1 66,0 a33,33 0 1,1 -66,0"/></defs>
+          <circle cx="50" cy="50" r="50" fill="#ff4a1c"/>
+          <text font-size="7.4" font-family="DM Mono, monospace" font-weight="500" fill="#14120f"><textPath href="#lp" textLength="203" lengthAdjust="spacing">GAVIN · AI ENGINEERING · A39 · SIDE A ·</textPath></text>
+          <circle cx="50" cy="50" r="13" fill="none" stroke="#14120f" stroke-width=".6"/>
+          <circle cx="50" cy="50" r="3.4" fill="#14120f"/>
+        </svg>
+      </div>
+      <div class="glint"></div>
+      <span class="vinyl-hint">↺ click the record</span>
+    </div>
+
+    <h1 class="name">
+      <span class="row1">
+        <span class="line l1" data-decrypt>Gavin</span>
+        <span class="mid">Matthew<br />A.</span>
+      </span>
+      <span class="line l2" data-decrypt>Dela Fuente</span>
+    </h1>
+
+    <div class="hero-bottom">
+      <div>
+        <p class="iam">I'm a <span class="rot"><span class="rot-inner" id="rot">
+          <span>1st-year AIE student.</span><span>problem solver in training.</span><span>guitar player.</span><span>future AI Engineer.</span><span>1st-year AIE student.</span>
+        </span></span></p>
+        <p class="intro">
+          I thrive on <mark>challenges</mark> and I'm passionate about learning anything related to technology and computing.
+          I embrace <mark>failure without fear</mark>, because every setback is a lesson that brings me one step closer to success.
+        </p>
+        <div class="cta">
+          <a href="#about" class="btn-pill">Read my story ↓</a>
+          <a href="#contact" class="btn-pill ghost">Say hi ↗</a>
+        </div>
+      </div>
+
+      <div class="ticket">
+        <div><small>Program</small><b>BS in Artificial Intelligence Engineering</b></div>
+        <div><small>Year level</small><b>1st Year</b></div>
+        <div><small>Section</small><b>A39</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track" id="mq">
+    <span>AI Engineering</span><i>✦</i><span>Cybersecurity</span><i>✦</i><span>Guitar</span><i>✦</i><span>Curiosity</span><i>✦</i><span>Fail forward</span><i>✦</i><span>Mapúa · A39</span><i>✦</i>
+  </div>
+</div>
+
+<!-- ====================== 02 ABOUT ====================== -->
+<section id="about" class="about">
+  <div class="wrap">
+    <div class="sec-label"><b>Track 02</b><span>About me</span></div>
+    <h2 class="h2 reveal">It started with <em>curiosity.</em></h2>
+
+    <div class="why reveal">
+      <div class="kicker">Why AI Engineering?</div>
+      <p class="lead">
+        I grew up in a family with a background in <mark>IT</mark>, so technology was always part of my world.
+        When I discovered that Mapúa offers a BS in Artificial Intelligence Engineering, my curiosity took over,
+        and that curiosity is what brought me into this program.
+      </p>
+    </div>
+
+    <div class="duo">
+      <div class="panel dark reveal">
+        <div class="kicker">Career goal</div>
+        <div class="goal-big" data-decrypt>AI Engineer</div>
+        <div class="goal-x" data-decrypt>× Cybersecurity</div>
+        <p>My goal is to become an AI Engineer who specializes in cybersecurity.</p>
+      </div>
+
+      <div class="panel light reveal" style="--d:120ms">
+        <div class="kicker">Current skills</div>
+        <ul class="skills">
+          <li><span class="sk-n">HTML</span><span class="sk-d">Simple coding · the basics</span></li>
+          <li><span class="sk-n">CSS</span><span class="sk-d">Simple coding · the basics</span></li>
+          <li><span class="sk-n">Teamwork</span><span class="sk-d">I collaborate well with the people around me</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tree-wrap reveal">
+      <div class="kicker" style="margin-bottom:18px">What I want to learn</div>
+      <h3>AI in Cybersecurity is the <span class="accent">main quest.</span></h3>
+      <p>It's what I'm most excited about. But to get there, I first need to learn the basics of coding and everything that comes with it. Here's the path as I see it.</p>
+      <div class="tree">
+        <div class="node done"><div class="dot">✓</div><b>HTML</b><small>The basics learned</small></div>
+        <div class="node done"><div class="dot">✓</div><b>CSS</b><small>The basics learned</small></div>
+        <div class="node now"><div class="dot">◐</div><b>Coding fundamentals</b><small>Learning now</small></div>
+        <div class="node locked"><div class="dot">🔒</div><b>Artificial Intelligence</b><small>Up ahead</small></div>
+        <div class="node locked goal"><div class="dot">★</div><b>AI in Cybersecurity</b><small>The goal</small></div>
+      </div>
+    </div>
+
+    <div class="stage reveal">
+      <div class="stage-head">
+        <div>
+          <div class="kicker" style="color:var(--red);padding:0;margin-bottom:14px">Outside the classroom</div>
+          <h3>I like playing <span class="accent">guitar.</span></h3>
+          <p>So I put one here. Run your cursor across the strings, or hit strum.</p>
+        </div>
+        <div class="stage-ctrl">
+          <div class="note-read">last note <b id="noteRead">–</b></div>
+          <button class="btn-pill" id="strum">Strum ↓</button>
+        </div>
+      </div>
+      <canvas id="guitar"></canvas>
+      <p class="guitar-hint">Click anywhere once to unlock sound, then glide over the strings.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 03 PORTFOLIO ====================== -->
+<section id="portfolio" class="portfolio">
+  <div class="wrap">
+    <div class="sec-label"><b>Track 03</b><span>Portfolio</span></div>
+    <h2 class="h2 reveal">The stage is set. <em>Nothing has dropped yet.</em></h2>
+
+    <div class="status reveal">
+      <span class="pulse"></span>
+      <span><strong>Portfolio status:</strong> I don't have any existing projects yet. These four slots are reserved for what comes next.</span>
+    </div>
+
+    <div class="sleeves">
+      <article class="sleeve s1 reveal">
+        <div class="rec"></div>
+        <div class="cover"><span class="no">01</span>
+          <div><h4>Projects</h4><div class="ph">[ placeholder · project title &amp; description ]</div><span class="soon">Coming soon</span></div></div>
+      </article>
+      <article class="sleeve s2 reveal" style="--d:100ms">
+        <div class="rec"></div>
+        <div class="cover"><span class="no">02</span>
+          <div><h4>Reports &amp; Lab Works</h4><div class="ph">[ placeholder · report or lab work ]</div><span class="soon">Coming soon</span></div></div>
+      </article>
+      <article class="sleeve s3 reveal" style="--d:200ms">
+        <div class="rec"></div>
+        <div class="cover"><span class="no">03</span>
+          <div><h4>Creative Outputs</h4><div class="ph">[ placeholder · creative output ]</div><span class="soon">Coming soon</span></div></div>
+      </article>
+      <article class="sleeve s4 reveal" style="--d:300ms">
+        <div class="rec"></div>
+        <div class="cover"><span class="no">04</span>
+          <div><h4>Project Links &amp; Files</h4><div class="ph">[ placeholder · links &amp; files ]</div><span class="soon">Coming soon</span></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 04 REFLECTIONS ====================== -->
+<section id="blog" class="blog">
+  <div class="wrap">
+    <div class="sec-label"><b>Track 04</b><span>Reflections / Blog</span></div>
+    <h2 class="h2 reveal">Liner <em>notes.</em></h2>
+
+    <div class="notes">
+      <article class="note open reveal">
+        <button class="note-head" aria-expanded="true"><span class="n">01</span><span class="t">Study first, then get taught.</span><span class="tag">Learning experience</span><span class="plus">+</span></button>
+        <div class="note-body"><div><p>One thing I've learned this year is to study a topic before it's taught to me. Getting ahead of the lesson makes it easier to follow once it's actually discussed in class.</p></div></div>
+      </article>
+
+      <article class="note reveal" style="--d:80ms">
+        <button class="note-head" aria-expanded="false"><span class="n">02</span><span class="t">Math is the boss level.</span><span class="tag">Challenge</span><span class="plus">+</span></button>
+        <div class="note-body"><div><p>Every subject that involves math has been my biggest challenge so far. I'm not hiding from it. I'm treating it as the part of the program that will make me stronger.</p></div></div>
+      </article>
+
+      <article class="note reveal" style="--d:160ms">
+        <button class="note-head" aria-expanded="false"><span class="n">03</span><span class="t">Feeling what Mapúa is really like.</span><span class="tag">Memorable moment</span><span class="plus">+</span></button>
+        <div class="note-body"><div><p>Experiencing what Mapúa feels like has been the highlight so far, even though it's hard. The difficulty is part of what makes it memorable.</p></div></div>
+      </article>
+    </div>
+
+    <div class="reflection reveal">
+      <div class="kicker">Personal reflection</div>
+      <blockquote>These experiences are making me a stronger version of myself, mentally and physically, because the program is truly challenging. They're teaching me how to solve problems, not just in math, but in <mark>real life.</mark></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 05 CONTACT ====================== -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="sec-label"><b>Track 05</b><span>Contact</span></div>
+    <h2 class="giant" data-decrypt>Let's talk.</h2>
+
+    <button class="mail" id="mailBtn" aria-label="Copy email address">gavinghd@gmail.com <small>click to copy ⧉</small></button>
+
+    <div class="links">
+      <a class="link-tile mag" href="mailto:gavinghd@gmail.com"><span class="arr">↗</span><small>Professional email</small><b>gavinghd@gmail.com</b></a>
+      <a class="link-tile mag" href="https://www.instagram.com/gavin_gblr/" target="_blank" rel="noopener"><span class="arr">↗</span><small>Instagram</small><b>@gavin_gblr</b></a>
+      <div class="link-tile soon"><small>LinkedIn</small><b>[ placeholder · coming soon ]</b></div>
+      <div class="link-tile soon"><small>GitHub</small><b>[ placeholder · coming soon ]</b></div>
+    </div>
+
+    <div class="foot">
+      <span>Gavin Matthew A. Dela Fuente</span>
+      <span>BS AI Engineering · 1st Year · A39</span>
+      <span>AIE100 Portfolio</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* ================= decrypt / scramble text ================= */
+const GLYPHS = '!<>-_\\/[]{}—=+*^?#%&01';
+function scrambleChar(sp, dur = 420) {
+  if (reduce || sp._b) return;
+  sp._b = true;
+  const final = sp.dataset.c, t0 = performance.now();
+  (function step() {
+    if ((performance.now() - t0) >= dur) { sp.textContent = final; sp._b = false; return; }
+    sp.textContent = GLYPHS[(Math.random() * GLYPHS.length) | 0];
+    setTimeout(step, 40);
+  })();
+}
+function splitChars(el) {
+  const txt = el.textContent.trim();
+  el.textContent = '';
+  el.setAttribute('aria-label', txt);
+  return [...txt].map(ch => {
+    const s = document.createElement('span');
+    const c = ch === ' ' ? '\u00A0' : ch;
+    s.className = 'ch'; s.dataset.c = c; s.textContent = c; s.setAttribute('aria-hidden', 'true');
+    if (c !== '\u00A0') s.addEventListener('mouseenter', () => scrambleChar(s));
+    el.appendChild(s);
+    return s;
+  });
+}
+const decryptEls = $$('[data-decrypt]').map(el => ({ el, spans: splitChars(el) }));
+function lockWidths() {
+  decryptEls.forEach(({ spans }) => spans.forEach(s => s.style.minWidth = ''));
+  decryptEls.forEach(({ spans }) => spans.forEach(s => { if (!s._b) s.style.minWidth = s.getBoundingClientRect().width + 'px'; }));
+}
+function runDecrypt({ spans }) {
+  spans.forEach((s, i) => setTimeout(() => { s.style.visibility = 'visible'; scrambleChar(s, 450 + Math.random() * 380); }, i * 65));
+}
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  lockWidths();
+  if (!reduce) decryptEls.forEach(({ spans }) => spans.forEach(s => s.style.visibility = 'hidden'));
+  const dio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { const item = decryptEls.find(d => d.el === e.target); if (item) runDecrypt(item); dio.unobserve(e.target); }
+  }), { threshold: .3 });
+  decryptEls.forEach(d => dio.observe(d.el));
+});
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(lockWidths, 200); });
+
+/* ================= reveal ================= */
+const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { threshold: .12 });
+$$('.reveal').forEach(el => rio.observe(el));
+
+/* ================= guitar-pick cursor ================= */
+if (fine) {
+  const pick = $('#pick');
+  let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y, rot = 0, sc = 1, ts = 1;
+  addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  document.addEventListener('mouseover', e => { ts = e.target.closest('a,button,.ch,canvas,.vinyl-wrap') ? 2.3 : 1; });
+  (function loop() {
+    const vx = tx - x;
+    x += vx * .28; y += (ty - y) * .28;
+    rot += (Math.max(-45, Math.min(45, vx * 1.5)) - rot) * .15;
+    sc += (ts - sc) * .18;
+    pick.style.transform = `translate(${x - 13}px,${y - 15}px) rotate(${rot}deg) scale(${sc})`;
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ================= rotating words ================= */
+(() => {
+  const inner = $('#rot'), n = inner.children.length; let i = 0;
+  setInterval(() => {
+    i++;
+    inner.style.transition = 'transform .7s cubic-bezier(.7,0,.2,1)';
+    inner.style.transform = `translateY(-${i * 1.15}em)`;
+    if (i === n - 1) setTimeout(() => { inner.style.transition = 'none'; inner.style.transform = 'translateY(0)'; i = 0; }, 750);
+  }, 2400);
+})();
+
+/* ================= audio (shared by vinyl + guitar) ================= */
+let audio;
+function unlockAudio() {
+  try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === 'suspended') audio.resume(); } catch (e) {}
+}
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, unlockAudio, { passive: true }));
+function playNote(f, vol = .3) {
+  if (!audio || audio.state !== 'running') return;
+  const t = audio.currentTime;
+  const o1 = audio.createOscillator(), o2 = audio.createOscillator(), o3 = audio.createOscillator();
+  const g = audio.createGain(), lp = audio.createBiquadFilter();
+  o1.type = 'triangle'; o1.frequency.value = f * 2;
+  o2.type = 'sine'; o2.frequency.value = f * 4;
+  o3.type = 'sawtooth'; o3.frequency.value = f * 2; o3.detune.value = 6;
+  const g3 = audio.createGain(); g3.gain.value = .25; o3.connect(g3);
+  lp.type = 'lowpass'; lp.Q.value = 1;
+  lp.frequency.setValueAtTime(3600, t); lp.frequency.exponentialRampToValueAtTime(420, t + 1.5);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + 2);
+  o1.connect(lp); o2.connect(lp); g3.connect(lp); lp.connect(g); g.connect(audio.destination);
+  [o1, o2, o3].forEach(o => { o.start(t); o.stop(t + 2.1); });
+}
+
+/* ================= vinyl ================= */
+const vinyl = $('#vinyl'), vwrap = $('#vinylWrap');
+let ang = 0, boost = 0, sv = 0, lastY = scrollY, mx = 0, my = 0;
+addEventListener('mousemove', e => { mx = (e.clientX / innerWidth - .5); my = (e.clientY / innerHeight - .5); });
+const EM = [82.41, 123.47, 164.81, 196.0, 246.94, 329.63];
+vwrap.addEventListener('click', () => {
+  unlockAudio(); boost = 16;
+  EM.forEach((f, i) => setTimeout(() => playNote(f, .22), i * 70));
+});
+
+/* ================= marquee ================= */
+const mq = $('#mq'); const mqHTML = mq.innerHTML; mq.innerHTML = mqHTML.repeat(4);
+let mqPos = 0;
+
+/* ================= master loop ================= */
+(function loop() {
+  const d = scrollY - lastY; lastY = scrollY; sv += (d - sv) * .15;
+  boost *= .965;
+  ang += .22 + boost + Math.abs(sv) * .06;
+  vinyl.style.transform = `rotate(${ang}deg)`;
+  vwrap.style.transform = `translate(${mx * -22}px, ${my * -16 - scrollY * .06}px)`;
+  const unit = mq.scrollWidth / 4;
+  mqPos -= 1.3 + Math.abs(sv) * .35;
+  if (-mqPos >= unit) mqPos += unit;
+  mq.style.transform = `translateX(${mqPos}px)`;
+  requestAnimationFrame(loop);
+})();
+
+/* ================= dock active ================= */
+const dockLinks = $$('#dock a'), secs = dockLinks.map(a => $(a.getAttribute('href')));
+function updateDock() {
+  let cur = 0;
+  secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * .5) cur = i; });
+  dockLinks.forEach((a, i) => a.classList.toggle('active', i === cur));
+}
+addEventListener('scroll', updateDock, { passive: true }); updateDock();
+
+/* ================= reflections accordion ================= */
+$$('.note-head').forEach(btn => btn.addEventListener('click', () => {
+  const note = btn.parentElement, open = note.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+}));
+
+/* ================= copy email + toast ================= */
+const toast = $('#toast'); let tt;
+function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2200); }
+$('#mailBtn').addEventListener('click', async () => {
+  const mail = 'gavinghd@gmail.com';
+  try { await navigator.clipboard.writeText(mail); }
+  catch (e) { const t = document.createElement('textarea'); t.value = mail; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  showToast('Copied: ' + mail);
+});
+
+/* ================= magnetic tiles ================= */
+if (fine) $$('.mag').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .08}px, ${(e.clientY - r.top - r.height / 2) * .12}px)`;
+  });
+  el.addEventListener('mouseleave', () => el.style.transform = '');
+});
+
+/* ================= guitar ================= */
+const gc = $('#guitar'), gx = gc.getContext('2d');
+const tuning = [{ n: 'E', f: 82.41 }, { n: 'A', f: 110 }, { n: 'D', f: 146.83 }, { n: 'G', f: 196 }, { n: 'B', f: 246.94 }, { n: 'e', f: 329.63 }];
+const strings = tuning.map((t, i) => ({ ...t, amp: 0, phase: Math.random() * 6, thick: 3.6 - i * .5, last: 0 }));
+const PAD = 38;
+const sY = i => PAD + i * ((gc.clientHeight - PAD * 2) / (strings.length - 1));
+function sizeGuitar() {
+  const r = gc.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  gc.width = r.width * dpr; gc.height = r.height * dpr; gx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+sizeGuitar(); addEventListener('resize', sizeGuitar);
+
+const noteRead = $('#noteRead');
+function tryPluck(s) {
+  const now = performance.now();
+  if (now - s.last < 150) return;
+  s.last = now; s.amp = 15; noteRead.textContent = s.n;
+  playNote(s.f);
+}
+let gLast = null;
+function gHit(e) {
+  const r = gc.getBoundingClientRect(), y = e.clientY - r.top;
+  const a = gLast === null ? y : gLast; gLast = y;
+  const lo = Math.min(a, y) - 7, hi = Math.max(a, y) + 7;
+  strings.forEach((s, i) => { const yy = sY(i); if (yy >= lo && yy <= hi) tryPluck(s); });
+}
+gc.addEventListener('pointermove', gHit);
+gc.addEventListener('pointerdown', e => { gLast = null; gHit(e); });
+gc.addEventListener('pointerleave', () => gLast = null);
+$('#strum').addEventListener('click', () => {
+  unlockAudio();
+  strings.forEach((s, i) => setTimeout(() => { s.last = 0; tryPluck(s); }, i * 75));
+});
+
+(function drawGuitar() {
+  const w = gc.clientWidth, h = gc.clientHeight;
+  gx.clearRect(0, 0, w, h);
+  // fretboard
+  const wood = gx.createLinearGradient(0, 0, 0, h);
+  wood.addColorStop(0, '#2b1d13'); wood.addColorStop(1, '#1b120b');
+  gx.fillStyle = wood; gx.fillRect(0, 0, w, h);
+  // nut
+  gx.fillStyle = '#e8dfc9'; gx.fillRect(58, 0, 7, h);
+  // frets
+  const frets = 7, fx = i => 58 + 7 + (w - 72) * (1 - Math.pow(.88, i + 1)) / (1 - Math.pow(.88, frets + 1)) * 1.0;
+  gx.strokeStyle = 'rgba(210,214,225,.55)'; gx.lineWidth = 2;
+  for (let i = 1; i <= frets; i++) { const x = 65 + ((w - 72) / frets) * i * (1 - i * .02); gx.beginPath(); gx.moveTo(x, 0); gx.lineTo(x, h); gx.stroke(); }
+  // inlay dots at frets 3, 5, 7
+  gx.fillStyle = 'rgba(239,232,218,.28)';
+  [3, 5, 7].forEach(i => { const x = 65 + ((w - 72) / frets) * (i - .5) * (1 - i * .02); gx.beginPath(); gx.arc(x, h / 2, 7, 0, 6.29); gx.fill(); });
+  // strings
+  strings.forEach((s, i) => {
+    const y = sY(i);
+    s.phase += s.f / 1100; s.amp *= .975;
+    const hot = s.amp > .6;
+    if (hot) { gx.shadowColor = '#ff4a1c'; gx.shadowBlur = 14; }
+    gx.strokeStyle = hot ? '#ff7a55' : '#d6c7a1';
+    gx.lineWidth = s.thick;
+    gx.beginPath();
+    for (let x = 65; x <= w; x += 4) {
+      const env = Math.sin(((x - 65) / (w - 65)) * Math.PI);
+      gx.lineTo(x, y + Math.sin(s.phase * 6 + x * .045) * s.amp * env);
+    }
+    gx.stroke(); gx.shadowBlur = 0;
+    gx.fillStyle = 'rgba(239,232,218,.6)'; gx.font = '500 13px DM Mono, monospace';
+    gx.fillText(s.n, 26, y + 5);
+  });
+  requestAnimationFrame(drawGuitar);
+})();
+</script>
+</body>
+</html>
